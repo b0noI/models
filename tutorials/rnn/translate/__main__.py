@@ -31,6 +31,8 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+from six.moves import urllib
+
 import math
 import os
 import random
@@ -42,8 +44,8 @@ import numpy as np
 from six.moves import xrange  # pylint: disable=redefined-builtin
 import tensorflow as tf
 
-from tensorflow.models.rnn.translate import data_utils
-from tensorflow.models.rnn.translate import seq2seq_model
+from translate import data_utils
+from translate import seq2seq_model
 
 
 tf.app.flags.DEFINE_float("learning_rate", 0.5, "Learning rate.")
@@ -76,6 +78,12 @@ FLAGS = tf.app.flags.FLAGS
 # See seq2seq_model.Seq2SeqModel for details of how they work.
 _buckets = [(5, 10), (10, 15), (20, 25), (40, 50)]
 
+def download_files():
+  urllib.request.urlretrieve("https://storage.googleapis.com/ml-lab-152505-ml/train.from", "train.en")
+  urllib.request.urlretrieve("https://storage.googleapis.com/ml-lab-152505-ml/train.to", "train.fr")
+  import shutil
+  shutil.copy("train.en", "dev.en")
+  shutil.copy("train.fr", "dev.fr")
 
 def read_data(source_path, target_path, max_size=None):
   """Read data from source and target files and put into buckets.
@@ -142,10 +150,15 @@ def create_model(session, forward_only):
 
 def train():
   """Train a en->fr translation model using WMT data."""
+  download_files()
   # Prepare WMT data.
   print("Preparing WMT data in %s" % FLAGS.data_dir)
   en_train, fr_train, en_dev, fr_dev, _, _ = data_utils.prepare_wmt_data(
       FLAGS.data_dir, FLAGS.en_vocab_size, FLAGS.fr_vocab_size)
+  #en_train="train.from"
+  #fr_train="train.to"
+  #en_dev=en_train
+  #fr_dev=fr_train
 
   with tf.Session() as sess:
     # Create model.
