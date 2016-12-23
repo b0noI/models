@@ -267,7 +267,7 @@ def decode():
           bucket_id = i
           break
       else:
-        logging.warning("Sentence truncated: %s", sentence) 
+        logging.warning("Sentence truncated: %s", sentence)
 
       # Get a 1-element batch to feed the sentence to the model.
       encoder_inputs, decoder_inputs, target_weights = model.get_batch(
