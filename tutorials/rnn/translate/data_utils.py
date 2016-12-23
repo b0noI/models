@@ -281,14 +281,14 @@ def prepare_data(data_dir, from_train_path, to_train_path, from_dev_path, to_dev
 
     Args:
       data_dir: directory in which the data sets will be stored.
-      train_path:
-      dev_path:
+      from_train_path: path to the file that includes "from" training samples.
+      to_train_path: path to the file that includes "to" training samples.
+      from_dev_path: path to the file that includes "from" dev samples.
+      to_dev_path: path to the file that includes "to" dev samples.
       from_vocabulary_size: size of the "from language" vocabulary to create and use.
       to_vocabulary_size: size of the "to language" vocabulary to create and use.
       tokenizer: a function to use to tokenize each data sentence;
         if None, basic_tokenizer will be used.
-      from_suffix:
-      to_suffix:
 
     Returns:
       A tuple of 6 elements:
