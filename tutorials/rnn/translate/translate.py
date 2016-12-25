@@ -42,8 +42,8 @@ import numpy as np
 from six.moves import xrange  # pylint: disable=redefined-builtin
 import tensorflow as tf
 
-import data_utils
-import seq2seq_model
+from translate import data_utils
+from translate import seq2seq_model
 
 
 tf.app.flags.DEFINE_float("learning_rate", 0.5, "Learning rate.")
@@ -143,7 +143,6 @@ def create_model(session, forward_only):
     session.run(tf.global_variables_initializer())
   return model
 
-
 def train():
   """Train a en->fr translation model using WMT data."""
   from_train = None
@@ -155,12 +154,17 @@ def train():
       to_train_data = FLAGS.to_train_data
       from_dev_data = from_train_data
       to_dev_data = to_train_data
+      if FLAGS.from_dev_data:
+          from_dev_data = FLAGS.from_dev_data
+      if FLAGS.to_dev_data:
+          to_dev_data = FLAGS.to_dev_data
+
       from_train, to_train, from_dev, to_dev, _, _ = data_utils.prepare_data(
           FLAGS.data_dir,
-          os.path.join(FLAGS.data_dir, from_train_data),
-          os.path.join(FLAGS.data_dir, to_train_data),
-          os.path.join(FLAGS.data_dir, from_dev_data),
-          os.path.join(FLAGS.data_dir, to_dev_data),
+          from_train_data,
+          to_train_data,
+          from_dev_data,
+          to_dev_data,
           FLAGS.from_vocab_size,
           FLAGS.to_vocab_size)
   else:
