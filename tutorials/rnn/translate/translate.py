@@ -298,7 +298,10 @@ def self_test():
     # Create model with vocabularies of 10, 2 small buckets, 2 layers of 32.
     model = seq2seq_model.Seq2SeqModel(10, 10, [(3, 3), (6, 6)], 32, 2,
                                        5.0, 32, 0.3, 0.99, num_samples=8)
-    sess.run(tf.global_variables_initializer())
+    try:
+      sess.run(tf.global_variables_initializer())
+    except AttributeError:
+      sess.run(tf.initialize_all_variables())
 
     # Fake data set for both the (3, 3) and (6, 6) bucket.
     data_set = ([([1, 1], [2, 2]), ([3, 3], [4]), ([5], [6])],
