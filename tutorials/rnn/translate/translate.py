@@ -145,7 +145,10 @@ def create_model(session, forward_only):
     model.saver.restore(session, ckpt.model_checkpoint_path)
   else:
     print("Created model with fresh parameters.")
-    session.run(tf.global_variables_initializer())
+    try:
+      session.run(tf.global_variables_initializer())
+    except AttributeError:
+      session.run(tf.initialize_all_variables())
   return model
 
 def train():
