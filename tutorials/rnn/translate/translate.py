@@ -136,11 +136,12 @@ def create_model(session, forward_only):
       dtype=dtype)
   ckpt = tf.train.get_checkpoint_state(FLAGS.train_dir)
   checkpoint_exists = False
-  try:
-    checkpoint_exists = tf.train.checkpoint_exists(ckpt.model_checkpoint_path)
-  except AttributeError:
-    checkpoint_exists = tf.gfile.Exists(ckpt.model_checkpoint_path)
-  if ckpt and checkpoint_exists:
+  if ckpt:
+    try:
+      checkpoint_exists = tf.train.checkpoint_exists(ckpt.model_checkpoint_path)
+    except AttributeError:
+      checkpoint_exists = tf.gfile.Exists(ckpt.model_checkpoint_path)
+  if checkpoint_exists:
     print("Reading model parameters from %s" % ckpt.model_checkpoint_path)
     model.saver.restore(session, ckpt.model_checkpoint_path)
   else:
